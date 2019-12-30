@@ -210,6 +210,8 @@ struct Configuration
 	SortMode browser_sort_mode;
 
 	LyricsFetchers lyrics_fetchers;
+
+	std::string migemo_dict_path;
 };
 
 extern Configuration Config;

@@ -56,7 +56,7 @@ ncmpcpp_SOURCES = \
 AM_CPPFLAGS= $(all_includes)
 
 # the library search path.
-ncmpcpp_LDFLAGS = $(all_libraries)
+ncmpcpp_LDFLAGS = $(all_libraries) -lmigemo
 noinst_HEADERS = \
 	curses/formatted_color.h \
 	curses/menu.h \

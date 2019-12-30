@@ -40,4 +40,5 @@ boost::posix_time::ptime Timer;
 
 std::mt19937 RNG;
 
+struct _migemo* migemo;
 }

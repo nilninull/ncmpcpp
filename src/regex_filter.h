@@ -36,6 +36,9 @@
 
 #include "utility/functional.h"
 
+#include "global.h"
+#include <type_traits>
+
 namespace {
 
 #ifdef BOOST_REGEX_ICU
@@ -81,13 +84,29 @@ template <typename StringT>
 inline Regex make(StringT &&s,
                   boost::regex_constants::syntax_option_type flags)
 {
-	return
+	using Global::migemo;
+
+	if (migemo != NULL && s[0] == '|') {
+		auto m_ret = migemo_query(migemo, reinterpret_cast<const unsigned char*>(s.c_str()+1));
+		typename std::remove_reference<StringT>::type mstr(reinterpret_cast<const char*>(m_ret));
+		migemo_release(migemo, m_ret);
+		return
+#ifdef BOOST_REGEX_ICU
+	boost::make_u32regex
+#else
+	boost::regex
+#endif // BOOST_REGEX_ICU
+	// (mstr, flags);
+	(std::forward<StringT>(mstr), flags);
+	} else {
+		return
 #ifdef BOOST_REGEX_ICU
 	boost::make_u32regex
 #else
 	boost::regex
 #endif // BOOST_REGEX_ICU
 	(std::forward<StringT>(s), flags);
+	}
 }
 
 template <typename CharT>

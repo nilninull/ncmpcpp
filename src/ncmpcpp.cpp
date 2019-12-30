@@ -24,6 +24,7 @@
 #include <cstring>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/locale.hpp>
 #include <iostream>
 #include <fstream>
@@ -90,7 +91,9 @@ int main(int argc, char **argv)
 	
 	using Global::VolumeState;
 	using Global::Timer;
-	
+
+	using Global::migemo;
+
 	std::setlocale(LC_ALL, "");
 	std::locale::global(Charset::internalLocale());
 
@@ -163,6 +166,15 @@ int main(int argc, char **argv)
 		}
 	}
 
+	if (!Config.migemo_dict_path.empty()) {
+		if (boost::filesystem::exists(Config.migemo_dict_path)) {
+			migemo = migemo_open(Config.migemo_dict_path.c_str());
+		} else {
+			std::cerr << "Migemo initialize failed." << std::endl;
+			std::cerr << "Specified dictionary file (" << Config.migemo_dict_path << ") does not exist." << std::endl;
+		}
+	}
+	
 	// local variables
 	bool key_pressed = false;
 	auto input = NC::Key::None;
@@ -251,5 +263,10 @@ int main(int argc, char **argv)
 			Statusbar::printf("Unexpected error: %1%", e.what());
 		}
 	}
+
+	if (migemo != NULL) {
+		migemo_close(migemo);
+	}
+	
 	return 0;
 }

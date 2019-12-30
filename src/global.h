@@ -24,6 +24,8 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <random>
 
+#include <migemo.h>
+
 #include "mpdpp.h"
 #include "screens/screen.h"
 
@@ -63,6 +65,8 @@ extern boost::posix_time::ptime Timer;
 // global RNG
 extern std::mt19937 RNG;
 
+// global migemo object
+extern struct _migemo* migemo;
 }
 
 #endif // NCMPCPP_GLOBAL_H
